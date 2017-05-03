@@ -3,6 +3,8 @@ package com.attendanceproject.attendid;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -64,6 +66,16 @@ public class MainActivity extends AppCompatActivity
 
         final ProgressDialog progressDialog=ProgressDialog.show( this,"Please wait","Getting data ready." );
         progressDialog.show();
+
+
+
+
+        if ( !isOnline() )
+        {
+
+            progressDialog.cancel();
+            Toast.makeText( this, "No network connection, turn on network and restart the app.", Toast.LENGTH_LONG ).show();
+        }
 
 
         myRef.addValueEventListener( new ValueEventListener()
@@ -308,5 +320,13 @@ public class MainActivity extends AppCompatActivity
         }
 
 
+    }
+
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }
